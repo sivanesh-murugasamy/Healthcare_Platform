@@ -168,12 +168,7 @@ Delete a document and its metadata.
 
 ---
 
-# 🙌 Credits
 
-Developed by **[Your Name]** as part of a full-stack assessment project.
+Developed by **Sivanesh M** as part of a full-stack assessment project.
 
----
 
-# 📄 License
-
-This project is open-source and free to use.
