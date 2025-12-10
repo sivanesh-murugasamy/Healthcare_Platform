@@ -1,0 +1,185 @@
+/* Global Styling */
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background: #f5f7fa;
+}
+
+/* Main Container */
+.container {
+  width: 90%;
+  max-width: 900px;
+  margin: auto;
+  padding-top: 40px;
+}
+
+/* Title */
+.title {
+  text-align: center;
+  font-size: 32px;
+  color: #2d3e50;
+  margin-bottom: 30px;
+}
+
+/* Upload Card */
+.upload-card {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.file-input {
+  margin: 15px 0;
+  padding: 10px;
+  border: 2px dashed #007bff;
+  border-radius: 8px;
+  width: 80%;
+  cursor: pointer;
+  background-color: #eef4ff;
+}
+
+.upload-btn {
+  padding: 12px 20px;
+  border: none;
+  background: #007bff;
+  color: white;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.upload-btn:hover {
+  background: #0056d2;
+}
+
+/* Section Title */
+.section-title {
+  font-size: 24px;
+  margin-bottom: 15px;
+  color: #2c3e50;
+}
+
+/* Document Table */
+.doc-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.doc-table th,
+.doc-table td {
+  padding: 14px;
+  text-align: left;
+}
+
+.doc-table th {
+  background: #007bff;
+  color: white;
+  font-weight: bold;
+}
+
+.doc-table tr:nth-child(even) {
+  background: #f4f7fb;
+}
+
+.btn {
+  padding: 7px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  margin-right: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.download {
+  background: #28a745;
+  color: white;
+}
+
+.download:hover {
+  background: #1d7f33;
+}
+
+.delete {
+  background: #dc3545;
+  color: white;
+}
+
+.delete:hover {
+  background: #b52a35;
+}
+
+/* Search Bar */
+.search-bar {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  border: 2px solid #007bff;
+  font-size: 16px;
+  outline: none;
+}
+
+.search-bar:focus {
+  border-color: #0056b3;
+  background: #eef4ff;
+}
+
+/* Pagination */
+.pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+.page-btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.page-btn:disabled {
+  background: #9bbcf5;
+  cursor: not-allowed;
+}
+
+.page-btn:hover:not(:disabled) {
+  background: #0056d2;
+}
+
+.page-info {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+  .upload-card,
+  .doc-table {
+    width: 100%;
+  }
+
+  .doc-table th,
+  .doc-table td {
+    font-size: 13px;
+  }
+
+  .upload-btn {
+    width: 100%;
+  }
+}
