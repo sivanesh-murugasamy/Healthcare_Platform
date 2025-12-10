@@ -1,194 +1,197 @@
+Design Document – Patient Document Management Portal
 
-Design Document – Patient PDF Management Portal
+A full-stack web application for uploading, viewing, searching, downloading, and deleting patient medical PDF documents.
+This document explains the technology choices, architecture, API design, data flow, and assumptions followed during development.
 
-1. Tech Stack Choices
-Q1. Frontend Framework Used and Why?
+1. Overview
 
-I selected React for the frontend because:
+This application simulates a simple patient portal used in healthcare platforms.
+Users can:
 
-It provides a fast, component-based architecture suitable for interactive UIs.
+Upload PDF documents
 
-Managing UI state (file input, search filtering, dynamic table updates) is easy with React hooks.
+View all uploaded documents
 
-It is widely used in modern full-stack assignments and offers clean integration with REST APIs.
+Search documents
 
-React enables building a responsive and attractive interface with minimal code overhead.
+Download documents
 
+Delete documents
 
-Q2. Backend Framework Used and Why?
+The project uses a lightweight tech stack suitable for local development.
 
-I chose Node.js with Express because:
+2. Tech Stack Choices
+Frontend: React
 
-Express is lightweight and ideal for building RESTful APIs.
+Reasoning:
 
-It integrates smoothly with Multer for handling file uploads.
+Component-based architecture
 
-JavaScript allows sharing similar logic between frontend and backend.
+Excellent for dynamic UI updates (document list, search)
 
-Setup is simple, making it efficient for local development and assignment-based projects.
+Easy API integration using Axios
 
+Clean and responsive UI design
 
-Q3. Database Used and Why?
+Backend: Node.js + Express
 
-I used SQLite, a file-based relational database, because:
+Reasoning:
 
-It requires no dedicated server and works immediately in a local environment.
+Minimal setup for REST APIs
 
-It is ideal for lightweight applications and local testing.
+Multer simplifies file uploads
 
-SQL support makes it suitable for storing structured metadata like filename, size, and timestamps.
+Works well with SQLite
 
-The assignment also recommends SQLite as an option.
+Flexible routing and JSON handling
 
+Database: SQLite
 
-Q4. What changes would be needed to support 1,000+ users?
+Reasoning:
 
-To scale this application for real-world multi-user usage:
+File-based, no installation required
 
-Move Database to PostgreSQL or MySQL for better concurrency and performance.
+Extremely simple for local projects
 
-Use Cloud Storage (AWS S3, Google Cloud Storage) instead of local uploads/ folder.
+Fits assignment requirement
 
-Add Authentication using JWT or OAuth.
+Stores metadata efficiently
 
-Implement Role-Based Access Control to separate patients and admin users.
+Database fields used:
 
-Add API Rate Limiting and Validation for security.
+id
 
-Deploy Backend on Scalable Services such as AWS Elastic Beanstalk or Docker containers.
+filename
 
-Introduce Caching Layers (Redis) for faster file metadata retrieval.
+filepath
 
-__________________________________________________________________________________________________________________________________
-2. System Flow Diagram
+filesize
 
-React Frontend
-    |
-    ↓
-Express Backend (REST API)
-    |
-    ├── SQLite Database (stores metadata: id, filename, size, created_at)
-    |
-    └── uploads/ folder (stores actual PDF files)
+created_at
 
-Summary
+3. Architecture
+System Diagram
+React Frontend (User Interface)
+        |
+        |  Axios calls
+        v
+Express Backend (API Server)
+        |
+        ├── SQLite Database (stores metadata)
+        |
+        └── uploads/ folder (stores PDF files)
 
-The frontend handles file selection, searching, listing, and user actions.
+Flow Summary
 
-The backend receives requests, processes file uploads using Multer, manages the database, and returns responses.
+React sends file uploads and document actions to Express.
 
-SQLite stores only metadata, while actual PDF files are kept in a local uploads/ directory.
-__________________________________________________________________________________________________________________________________
-3. API Specification
+Multer stores PDF files in /uploads.
 
-* POST /documents/upload
+SQLite stores metadata about each file.
 
-Description: Uploads a PDF file to the server.
-Request Body: multipart/form-data containing field "file"
-Response Example:
+Backend returns responses used to update the UI.
+
+4. API Specification
+
+Below is the full API design implemented.
+
+POST /documents/upload
+
+Upload a PDF file.
+
+Request:
+multipart/form-data with field "file"
+
+Response:
 
 {
   "message": "File uploaded",
   "id": 1
 }
 
+GET /documents
 
-Notes: Only PDF files are allowed via MIME-type validation.
+Fetch the list of all uploaded documents.
 
-* GET /documents
-
-Description: Returns a list of all uploaded PDF metadata.
 Response Example:
 
 [
   {
     "id": 1,
     "filename": "report.pdf",
-    "filesize": 24500,
+    "filesize": 20480,
     "created_at": "2025-01-10T12:45:20.000Z"
   }
 ]
 
-* GET /documents/:id
+GET /documents/:id
 
-Description: Downloads a specific PDF file based on ID.
-Response: File stream download.
+Downloads the document matching the given ID.
 
-* DELETE /documents/:id
+Response:
+Binary file stream for download.
 
-Description: Deletes both the PDF file and its metadata record.
-Response Example:
+DELETE /documents/:id
+
+Deletes the corresponding file and metadata record.
+
+Response:
 
 {
   "message": "File deleted"
 }
-__________________________________________________________________________________________________________________________________
 
+5. Data Flow Description
+File Upload Flow
 
-4. Data Flow Description
+User selects a PDF on the frontend.
 
-Q5. Upload Process — Step-by-Step
+React sends it to backend via FormData POST request.
 
-User selects a PDF file on the React frontend.
+Express validates file type and uploads using Multer.
 
-React sends the file using a POST request with FormData.
+File is saved in the /uploads/ folder.
 
-Express receives the request and Multer:
+Metadata (name, path, size, timestamp) is saved in SQLite.
 
-Validates the file type (must be PDF).
+Backend sends success response.
 
-Saves the file inside the /uploads folder.
+React reloads the document list.
 
-Backend extracts metadata (filename, path, size, timestamp).
+File Download Flow
 
-Metadata is inserted into SQLite database.
+User clicks Download in the UI.
 
-Backend returns a success message and new document ID.
+React opens /documents/:id.
 
-Frontend reloads the document list and displays updated data.
+Backend fetches file path from SQLite.
 
+File is streamed back to the browser.
 
+File Delete Flow
 
-Q6. Download Process — Step-by-Step
+User clicks Delete.
 
-User clicks the Download button in the table.
+React calls DELETE /documents/:id.
 
-React triggers a GET request to /documents/:id.
+Backend deletes the file from uploads.
 
-Backend retrieves file path from SQLite.
+Metadata removed from SQLite.
 
-The file is streamed back to the browser as a download.
+Updated list is returned to the frontend.
 
-Delete Process (Additional Feature)
+6. Assumptions
 
-User clicks Delete on a document.
+No authentication is required (assignment states single-user environment).
 
-Frontend sends DELETE request to backend.
+Only PDF files are supported.
 
-Backend deletes the file from uploads/.
+Maximum file size assumed reasonable (<10MB).
 
-Corresponding metadata is removed from SQLite.
+Error handling is minimal due to project scope.
 
-Updated document list is returned.
+Application is expected to run locally.
 
-__________________________________________________________________________________________________________________________________
+File versioning is not required.
 
-5. Assumptions
-
-Q6. List of Assumptions
-
-Authentication is not required (assignment states "assume one user").
-
-Only PDF uploads are allowed.
-
-File size is assumed to be within reasonable limits (e.g., <10 MB).
-
-Application runs entirely on local machine.
-
-uploads/ folder is accessible and has write permissions.
-
-Concurrency requirements are minimal since the project is assignment-level.
-
-No versioning of documents is needed.
-
-__________________________________________________________________________________________________________________________________
+uploads/ folder has read/write permissions.
